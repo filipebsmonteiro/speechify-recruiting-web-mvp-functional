@@ -19,26 +19,20 @@ import Transcriber from "./transcriber.js";
 
 const initializeWebSocket = (io) => {
   io.on("connection", (socket) => {
-    // ... add needed event handlers and logic
     console.log(`connection made (${socket.id})`); 
     const transcriber = new Transcriber()
-    // let connection = new Transcriber()
     let sampleRate = null;
 
     const startTranscriptionStream = async (config) => {
-      if (transcriber.connection) {
-        return
-      }
-
       if (typeof config !== 'object' || !config.sampleRate) {
         console.warn(`No Config Provided`)
       }
-      sampleRate = config?.sampleRate ? config.sampleRate : sampleRate
-
+      
       if (!sampleRate) {
         throw new Error(`Invalid Configuration`)
       }
-
+      
+      sampleRate = config?.sampleRate || sampleRate
       await transcriber.startTranscriptionStream(sampleRate)
     }
 
@@ -111,12 +105,8 @@ const initializeWebSocket = (io) => {
       transcriber.endTranscriptionStream();
     })
 
-    
-    // socket.emit('final', data)
-    // socket.emit('partial', data)
+    return io;
   });
-
-  return io;
 };
 
 export default initializeWebSocket;
