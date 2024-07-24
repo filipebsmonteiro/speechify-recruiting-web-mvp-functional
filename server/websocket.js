@@ -25,13 +25,8 @@ const initializeWebSocket = (io) => {
 
     const startTranscriptionStream = async (config) => {
       if (typeof config !== 'object' || !config.sampleRate) {
-        console.warn(`No Config Provided`)
+        throw new Error('Invalid configuration')
       }
-      
-      if (!sampleRate) {
-        throw new Error(`Invalid Configuration`)
-      }
-      
       sampleRate = config?.sampleRate || sampleRate
       await transcriber.startTranscriptionStream(sampleRate)
     }

@@ -30,14 +30,14 @@ const useSocket = () => {
 
     
     return () => {
-      socket.disconnect()
-    }
-  });
+      socket.removeAllListeners();
+      socket.disconnect();
+    };
+  }, [socket]);
 
   const initialize = () => {
     socket.removeAllListeners()
     socket.connect()
-    socket.on
   };
 
   const disconnect = () => {
@@ -47,11 +47,13 @@ const useSocket = () => {
     socket.disconnect()
   };
 
+  const configureStream = (sampleRate) => {
+    socket.emit("configure-stream", { sampleRate });
+  }
+
   const transcriptAudio = (audioData) => {
-    console.log('canTranscribe.current :>> ', canTranscribe.current);
     if (!canTranscribe.current) {
       initialize()
-      return
     }
 
     socket.emit("incoming-audio", audioData)
@@ -59,6 +61,7 @@ const useSocket = () => {
 
   // ... free to add more functions
   return {
+    configureStream,
     initialize,
     disconnect,
     transcriptAudio,

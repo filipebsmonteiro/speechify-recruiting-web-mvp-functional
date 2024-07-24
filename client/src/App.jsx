@@ -9,7 +9,7 @@ import useSocket from "./useSocket";
 // NOTE: Don't use createPortal()
 
 function App() {
-  const { initialize, disconnect, transcriptAudio, socket } = useSocket();
+  const { initialize, disconnect, configureStream, transcriptAudio, socket } = useSocket();
   const partial = useRef("");
   const transcription = useRef("");
   const [copied, setCopied] = useState(false);
@@ -59,7 +59,7 @@ function App() {
 
   const onStartRecordingPress = async () => {
     const sampleRate = await startRecording();
-    socket.emit("configure-stream", { sampleRate })
+    configureStream(sampleRate)
   };
 
   const onStopRecordingPress = async () => {
