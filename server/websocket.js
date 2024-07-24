@@ -105,8 +105,8 @@ const initializeWebSocket = (io) => {
       transcriber.endTranscriptionStream();
     })
 
-    return io;
   });
+  return io;
 };
 
 export default initializeWebSocket;

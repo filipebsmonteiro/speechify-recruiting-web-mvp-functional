@@ -7,8 +7,8 @@ const serverURL = "http://localhost:8080";
 // const emmits = ["connection","configure-stream","incoming-audio","stop-stream", "disconnect"];
 
 const socket = io(serverURL, {
+  transports: ['websocket'],
   autoConnect: false,
-  transports: ['websocket']
 })
 
 // feel free to pass in any props
@@ -34,11 +34,6 @@ const useSocket = () => {
     }
   });
 
-  const configureStream = (sampleRate) => {
-    console.log('sampleRate :>> ', sampleRate);
-    socket.emit("configure-stream", { sampleRate })
-  };
-
   const initialize = () => {
     socket.removeAllListeners()
     socket.connect()
@@ -48,7 +43,6 @@ const useSocket = () => {
   const disconnect = () => {
     canTranscribe.current = false
     socket.emit("stop-stream")
-    socket.emit("disconnect")
     socket.removeAllListeners()
     socket.disconnect()
   };
@@ -57,6 +51,7 @@ const useSocket = () => {
     console.log('canTranscribe.current :>> ', canTranscribe.current);
     if (!canTranscribe.current) {
       initialize()
+      return
     }
 
     socket.emit("incoming-audio", audioData)
@@ -66,7 +61,6 @@ const useSocket = () => {
   return {
     initialize,
     disconnect,
-    configureStream,
     transcriptAudio,
     socket
   };
